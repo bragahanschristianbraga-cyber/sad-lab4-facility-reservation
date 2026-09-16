@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Reservation System — Login</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+    <h1>🏢 Facility Reservation System</h1>
+    <p class="subtitle">Role-Based Facility Reservation and Approval System</p>
+
+    <div id="alertBox"></div>
+
+    <!-- LOGIN FORM -->
+    <form id="loginForm">
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="loginUsername" required autocomplete="username" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="loginPassword" required autocomplete="current-password" />
+      </div>
+      <button type="submit" class="btn btn-block" id="loginBtn">Log In</button>
+    </form>
+
+    <!-- REGISTER FORM (Requester self-signup) -->
+    <form id="registerForm" class="hidden">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="regFullName" required />
+      </div>
+      <div class="field">
+        <label>Username</label>
+        <input type="text" id="regUsername" required />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="regPassword" required />
+      </div>
+      <button type="submit" class="btn btn-block" id="registerBtn">Create Requester Account</button>
+    </form>
+
+    <p class="switch-link">
+      <a id="showRegister">New requester? Create an account</a>
+      <a id="showLogin" class="hidden">Back to login</a>
+    </p>
+
+    <p class="small-note" style="text-align:center; margin-top:14px;">
+      Demo accounts — Administrator: <b>admin / admin123</b> · Facility Staff: <b>staff / staff123</b> · Requester: <b>juan / juan123</b>
+    </p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  const alertBox = document.getElementById("alertBox");
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+  const showRegister = document.getElementById("showRegister");
+  const showLogin = document.getElementById("showLogin");
+
+  function showAlert(message, type = "error") {
+    alertBox.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+  }
+  function clearAlert() { alertBox.innerHTML = ""; }
+
+  // Already logged in? go straight to dashboard.
+  if (getCurrentUser()) window.location.href = "dashboard.html";
+
+  showRegister.addEventListener("click", () => {
+    loginForm.classList.add("hidden");
+    registerForm.classList.remove("hidden");
+    showRegister.classList.add("hidden");
+    showLogin.classList.remove("hidden");
+    clearAlert();
+  });
+  showLogin.addEventListener("click", () => {
+    registerForm.classList.add("hidden");
+    loginForm.classList.remove("hidden");
+    showLogin.classList.add("hidden");
+    showRegister.classList.remove("hidden");
+    clearAlert();
+  });
+
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlert();
+    const btn = document.getElementById("loginBtn");
+    btn.disabled = true;
+    btn.textContent = "Logging in...";
+    try {
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+      const result = await login(username, password);
+      if (!result.ok) {
+        showAlert(result.message);
+      } else {
+        window.location.href = "dashboard.html";
+      }
+    } catch (err) {
+      showAlert("Login failed: " + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Log In";
+    }
+  });
+
+  registerForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAlert();
+    const btn = document.getElementById("registerBtn");
+    btn.disabled = true;
+    btn.textContent = "Creating account...";
+    try {
+      const fullName = document.getElementById("regFullName").value;
+      const username = document.getElementById("regUsername").value;
+      const password = document.getElementById("regPassword").value;
+      const result = await registerRequester(username, password, fullName);
+      if (!result.ok) {
+        showAlert(result.message);
+      } else {
+        showAlert("Account created! You can now log in.", "success");
+        registerForm.reset();
+        showLogin.click();
+      }
+    } catch (err) {
+      showAlert("Registration failed: " + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Create Requester Account";
+    }
+  });
+</script>
+</body>
+</html>
