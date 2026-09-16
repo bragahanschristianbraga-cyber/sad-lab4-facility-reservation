@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Facility Reservation System — Dashboard</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="topbar">
+  <h1>🏢 Facility Reservation System</h1>
+  <div class="user-chip">
+    <span id="userName"></span>
+    <span class="role-badge" id="userRole"></span>
+    <button class="btn btn-outline btn-sm" style="background:transparent;color:#fff;border-color:#fff;" onclick="logout()">Log Out</button>
+  </div>
+</div>
+
+<div class="tabs" id="tabsBar"></div>
+
+<div class="container">
+
+  <!-- FACILITIES TAB -->
+  <div id="tab-facilities" class="tab-content hidden">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 style="border:none;margin:0;padding:0;">Facilities</h2>
+        <button class="btn btn-sm" id="addFacilityBtn">+ Add Facility</button>
+      </div>
+      <div id="facilitiesTableWrap"></div>
+    </div>
+  </div>
+
+  <!-- RESERVATIONS TAB -->
+  <div id="tab-reservations" class="tab-content hidden">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 style="border:none;margin:0;padding:0;">Reservations</h2>
+        <button class="btn btn-sm" id="newReservationBtn">+ New Reservation</button>
+      </div>
+      <div id="reservationsTableWrap"></div>
+    </div>
+  </div>
+
+  <!-- USERS TAB (Administrator only) -->
+  <div id="tab-users" class="tab-content hidden">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 style="border:none;margin:0;padding:0;">Users</h2>
+        <button class="btn btn-sm" id="addUserBtn">+ Add User</button>
+      </div>
+      <div id="usersTableWrap"></div>
+    </div>
+  </div>
+
+  <!-- SERVICE CONCERNS TAB -->
+  <div id="tab-service" class="tab-content hidden">
+    <div class="panel">
+      <div class="panel-header">
+        <h2 style="border:none;margin:0;padding:0;">Service Concerns</h2>
+        <button class="btn btn-sm hidden" id="newServiceBtn">+ Report Concern</button>
+      </div>
+      <div id="serviceTableWrap"></div>
+    </div>
+  </div>
+
+  <!-- AUDIT LOGS TAB (Administrator only) -->
+  <div id="tab-audit" class="tab-content hidden">
+    <div class="panel">
+      <h2>Audit Logs</h2>
+      <div id="auditTableWrap"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Generic modal -->
+<div class="modal-backdrop hidden" id="modalBackdrop">
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/audit.js"></script>
+<script src="js/facilities.js"></script>
+<script src="js/reservations.js"></script>
+<script src="js/serviceRequests.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
